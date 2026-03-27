@@ -164,14 +164,14 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/pterodactyl.conf /etc/nginx/sites-enabled/pterodactyl.conf || true
+ln -s /etc/nginx/sites-available/ogactyl.conf /etc/nginx/sites-enabled/ogactyl.conf || true
 nginx -t && systemctl restart nginx
 ok "Nginx online"
 
 # --- Queue Worker ---
-tee /etc/systemd/system/pteroq.service > /dev/null << 'EOF'
+tee /etc/systemd/system/ogactyl.service > /dev/null << 'EOF'
 [Unit]
-Description=Pterodactyl Queue Worker
+Description=Ogactyl Queue Worker
 After=redis-server.service
 
 [Service]
