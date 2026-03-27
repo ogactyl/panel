@@ -132,35 +132,35 @@ server {
 }
 
 server {
-    listen 443 ssl http2;
-    server_name ${DOMAIN};
+    listen 80;
+    server_name panel.yourdomain.com;
 
-    root /var/www/pterodactyl/public;
+    root /var/www/ogactyl/public;
     index index.php;
 
-    ssl_certificate /etc/certs/panel/fullchain.pem;
-    ssl_certificate_key /etc/certs/panel/privkey.pem;
+    access_log /var/log/nginx/ogactyl.access.log;
+    error_log  /var/log/nginx/ogactyl.error.log error;
 
     client_max_body_size 100m;
-    client_body_timeout 120s;
+    client_body_timeout  120s;
+
     sendfile off;
 
     location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
-    location ~ \.php\$ {
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
-        fastcgi_pass unix:/run/php/php${PHP_VERSION}-fpm.sock;
-        fastcgi_index index.php;
-        include /etc/nginx/fastcgi_params;
-        fastcgi_param PHP_VALUE "upload_max_filesize=100M \n post_max_size=100M";
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass            unix:/run/php/php8.1-fpm.sock;
+        fastcgi_index           index.php;
+        include                 fastcgi_params;
+        fastcgi_param           PHP_VALUE "upload_max_filesize = 100M \n post_max_size=100M";
+        fastcgi_param           SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_read_timeout    300;
     }
 
-    location ~ /\.ht {
-        deny all;
-    }
+    location ~ /\.ht { deny all; }
 }
 EOF
 
